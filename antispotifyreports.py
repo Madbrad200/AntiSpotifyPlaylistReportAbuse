@@ -47,7 +47,7 @@ while True:
     if playlist_name != "ENTER YOUR PLAYLIST TITLE HERE":
 
         # restore the removed data
-        change_playlist_data = requests.put('https://api.spotify.com/v1/playlists/6nBFllAlmmbJ5VQpFMD7uF',
+        change_playlist_data = requests.put('https://api.spotify.com/v1/playlists/ENTER_PLAYLIST_CODE_HERE',
                                             json={
                                                   "name": "ENTER YOUR PLAYLIST TITLE HERE",
                                                   "description": "ENTER YOUR PLAYLIST DESCRIPTION HERE",
