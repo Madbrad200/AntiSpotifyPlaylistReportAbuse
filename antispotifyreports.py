@@ -80,6 +80,7 @@ while True:
         
         # token has expired and we need a new one
         if change_playlist_data.status == 401:
+            print("Token reset!")
             change_playlist_data = requests.put(f'https://api.spotify.com/v1/playlists/{playlist_code}',
                                                 json={
                                                       "name": preserved_playlist_name,
