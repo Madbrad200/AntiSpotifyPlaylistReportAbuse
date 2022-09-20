@@ -4,6 +4,8 @@ Are you a Spotify playlister? Is your playlist title/description often wiped by 
 
 This is a simple script that will restore your Spotify playlists title and description. The script will check the playlist every 31 seconds (this is adjustable, though I wouldn't reduce it) to see if the title is in-tact. If the title has been removed (or changed), the script will restore the title as it is supposed to be.
 
+It does not currently restore the cover art.
+
 This script was mainly created for personal use, though I'm certain others will find it useful as well. Please [raise an Issue](https://github.com/Madbrad200/AntiSpotifyPlaylistReportAbuse/issues/new) if you have any questions on how to change, run, or expand the script.
 
 ## Installation:
