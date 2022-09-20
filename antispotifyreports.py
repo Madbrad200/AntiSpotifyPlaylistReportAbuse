@@ -89,8 +89,13 @@ while True:
                                                       "description": playlist_desc,
                                                       },
                                                 headers={'Authorization': f'Bearer {get_new_token}'})
-            
-        print(f"({datetime.now().strftime('%H:%M:%S')}){change_playlist_data}\nThe playlist has been successfully restored.")
+        elif change_playlist_data.status_code == 429:
+            print("You're sending too many requests and are being rate limited! Try changing the 'time.sleep()' (at the end of the while loop) value to a higher number.")
+        elif change_playlist_data.status_code == 503:
+            print("Service Unavailable: this is a temporary problem with Spotify and should fix itself.")
+            time.sleep(60)
+        else:
+            print(f"({datetime.now().strftime('%H:%M:%S')}){change_playlist_data}\nThe playlist has been successfully restored.")
 
     else:
         print(f"({datetime.now().strftime('%H:%M:%S')}){playlist_data['name']}\nThe above playlist does not need to be fixed :)")
