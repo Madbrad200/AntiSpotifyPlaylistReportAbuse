@@ -64,3 +64,5 @@ To run the script, enter the following in your terminal:
 `python3 antispotifyreports.py`
 
 This may vary depending on your python version and installation (e.g you may need to write `python3.9` instead).
+
+Upon running the script, you will be asked to navigate to a URL in your browser. Following this, you will be redirected to your specified `redirect_uri` (I use `https://localhost/`). You must copy/paste this redirected URL into the terminal (it will have been appended with a code, e.g `https://localhost/?code....`). The script will then run indefinitely. 
