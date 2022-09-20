@@ -37,11 +37,15 @@ Keep in mind for optimal usage, you want this script to be running 24/7. So I'd 
 Before using this program, you'll need to get credentials from [Spotify's API](https://developer.spotify.com/documentation/web-api/quick-start/).
 An account on Spotify will provide two credentials: 'client id' and 'client secret.'
 
-Modify the following two fields:
+Modify the following fields:
 ```python
 client_id = 'your_client_id'
 client_secret = 'your_client_secret'
 ```
+
+You will also need to change the `base64_encoded` field. Do to so, [go here](https://www.base64encode.org/) and paste in your client ID and client secret (for example, `thisisafakeid:andafakesecret`). Click `Encode`, then copy the result into the `base64_encoded` field in the python code.
+
+You will also need to enter your playlist details in the `preserved_playlist_name`, `playlist_desc`, and `playlist_code` fields.
 
 **Never publish your ID publicly**
 
