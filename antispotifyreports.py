@@ -81,12 +81,14 @@ while True:
         # token has expired and we need a new one
         if change_playlist_data.status == 401:
             print("Token reset!")
+            get_new_token = refresh_token_func()
+            
             change_playlist_data = requests.put(f'https://api.spotify.com/v1/playlists/{playlist_code}',
                                                 json={
                                                       "name": preserved_playlist_name,
                                                       "description": playlist_desc,
                                                       },
-                                                headers={'Authorization': f'Bearer {access_token}'})
+                                                headers={'Authorization': f'Bearer {get_new_token}'})
             
         print(f"({datetime.now().strftime('%H:%M:%S')}){change_playlist_data}\nThe playlist has been successfully restored.")
 
