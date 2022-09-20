@@ -79,7 +79,7 @@ while True:
                                             headers={'Authorization': f'Bearer {access_token}'})
         
         # token has expired and we need a new one
-        if change_playlist_data.status == 401:
+        if change_playlist_data.status_code == 401:
             print("Token reset!")
             get_new_token = refresh_token_func()
             
