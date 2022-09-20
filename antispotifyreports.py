@@ -25,32 +25,38 @@ fetch_token = spotify.fetch_token("https://accounts.spotify.com/api/token", auth
 access_token = fetch_token["access_token"]
 # we have now been authenticated
 
+# enter the details of your playlist
+preserved_playlist_name = "ENTER YOUR PLAYLIST TITLE HERE"
+playlist_desc = "ENTER YOUR PLAYLIST DESCRIPTION HERE"
+
+# note: you need to enter your playlists code
+# the code can be found via the playlist url
+# e.g https://open.spotify.com/playlist/37i9dQZEVXbMDoHDwVN2tF?si=xcPmLVHRQVutEp6HgynU1Q
+# in this playlist, the playlist code is 37i9dQZEVXbMDoHDwVN2tF
+playlist_code = "ENTER PLAYLIST CODE HERE"
+
 # loop will run indefinitely 
 while True:
 
     # handle the playlist data
-    # note: you need to enter your playlists code
-    # the code can be found via the playlist url
-    # e.g https://open.spotify.com/playlist/37i9dQZEVXbMDoHDwVN2tF?si=xcPmLVHRQVutEp6HgynU1Q
-    # in this playlist, the playlist code is 37i9dQZEVXbMDoHDwVN2tF
-    get_playlist = requests.get('https://api.spotify.com/v1/playlists/ENTER_PLAYLIST_CODE_HERE',
+    get_playlist = requests.get(f'https://api.spotify.com/v1/playlists/{playlist_code}',
                                 headers={'Authorization': f'Bearer {access_token}'})
     playlist_data = get_playlist.json()
 
     try:
-        playlist_name = playlist_data["name"]
+        current_playlist_name = playlist_data["name"]
     except KeyError as e:
         # if the name field is empty (happens when bots abuse reports)
-        playlist_name = ""
+        current_playlist_name = ""
 
     # enter the title your playlist is /supposed/ to be here
-    if playlist_name != "ENTER YOUR PLAYLIST TITLE HERE":
+    if current_playlist_name != preserved_playlist_name:
 
         # restore the removed data
-        change_playlist_data = requests.put('https://api.spotify.com/v1/playlists/ENTER_PLAYLIST_CODE_HERE',
+        change_playlist_data = requests.put(f'https://api.spotify.com/v1/playlists/{playlist_code}',
                                             json={
-                                                  "name": "ENTER YOUR PLAYLIST TITLE HERE",
-                                                  "description": "ENTER YOUR PLAYLIST DESCRIPTION HERE",
+                                                  "name": preserved_playlist_name,
+                                                  "description": playlist_desc,
                                                   },
                                             headers={'Authorization': f'Bearer {access_token}'})
         print(f"{change_playlist_data}\nThe playlist has been successfully restored.")
