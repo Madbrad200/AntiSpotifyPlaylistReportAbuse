@@ -29,8 +29,6 @@ redirect_response = input("\n\nPlease paste the full redirect URL here: ")
 auth = HTTPBasicAuth(client_id, client_secret)
 
 fetch_token = spotify.fetch_token("https://accounts.spotify.com/api/token", auth=auth, authorization_response=redirect_response)
-access_token = fetch_token["access_token"]  # expires in 3600 seconds
-refresh_token = fetch_token["refresh_token"]  # allows us to refresh the token without re-logging in
 # we have now been authenticated
 
 # enter the details of your playlist
@@ -43,22 +41,46 @@ playlist_desc = "ENTER YOUR PLAYLIST DESCRIPTION HERE"
 # in this playlist, the playlist code is 37i9dQZEVXbMDoHDwVN2tF
 playlist_code = "ENTER PLAYLIST CODE HERE"
 
+# list of our tokens
+# we will choose to use the last items in the list
+access_tokens = [fetch_token["access_token"]]
+refresh_tokens = [fetch_token["refresh_token"]]
+
 # this function will allow us to refresh our token without re-logging in, after it expires
-def refresh_token_func():
+def refresh_token_func(token):
+    
+    while True:
 
-    response = requests.post('https://accounts.spotify.com/api/token', 
-                            {"grant_type": "refresh_token", 
-                             "refresh_token": refresh_token},
-                             headers={"Authorization": f"Basic {base64_encoded}"})
-    response_data = response.json()
-    return response_data["access_token"]
+        response = requests.post('https://accounts.spotify.com/api/token', 
+                                 {"grant_type": "refresh_token", 
+                                  "refresh_token": token},
+                                 headers={"Authorization": f"Basic {base64_encoded}"})
+        response_data = response.json()
+        try: 
+            access_tokens.append(response_data["access_tokens"])
+            print("Access Token refreshed!")
+            if "refresh_token" in response_data.keys():
+                refresh_tokens.append(response_data["refresh_token"])
+                print("Refresh Token refreshed!")
+            break
+        except KeyError:
+            # in-case there is a temporary error with Spotify
+            time.sleep(31)
+            print(response_data)
 
+count = 0
 # loop will run indefinitely 
 while True:
+    
+    # every 3600 seconds or so, we need to refresh the token
+    # with time.sleep set at 31s, this roughly equals 116 complete loops
+    if count == 116:
+        refresh_token_func(refresh_tokens[-1])
+        count -= 0  # reset count to 0
 
     # handle the playlist data
     get_playlist = requests.get(f'https://api.spotify.com/v1/playlists/{playlist_code}',
-                                headers={'Authorization': f'Bearer {access_token}'})
+                                headers={'Authorization': f'Bearer {access_tokens[-1]}'})
     playlist_data = get_playlist.json()
 
     try:
@@ -76,20 +98,9 @@ while True:
                                                   "name": preserved_playlist_name,
                                                   "description": playlist_desc,
                                                   },
-                                            headers={'Authorization': f'Bearer {access_token}'})
-        
-        # token has expired and we need a new one
-        if change_playlist_data.status_code == 401:
-            print("Token reset!")
-            get_new_token = refresh_token_func()
-            
-            change_playlist_data = requests.put(f'https://api.spotify.com/v1/playlists/{playlist_code}',
-                                                json={
-                                                      "name": preserved_playlist_name,
-                                                      "description": playlist_desc,
-                                                      },
-                                                headers={'Authorization': f'Bearer {get_new_token}'})
-        elif change_playlist_data.status_code == 429:
+                                            headers={'Authorization': f'Bearer {access_tokens[-1]}'})
+       
+        if change_playlist_data.status_code == 429:
             print("You're sending too many requests and are being rate limited! Try changing the 'time.sleep()' (at the end of the while loop) value to a higher number.")
         elif change_playlist_data.status_code == 503:
             print("Service Unavailable: this is a temporary problem with Spotify and should fix itself.")
