@@ -48,25 +48,28 @@ refresh_tokens = [fetch_token["refresh_token"]]
 
 # this function will allow us to refresh our token without re-logging in, after it expires
 def refresh_token_func(token):
-    
+
     while True:
 
         response = requests.post('https://accounts.spotify.com/api/token', 
                                  {"grant_type": "refresh_token", 
                                   "refresh_token": token},
                                  headers={"Authorization": f"Basic {base64_encoded}"})
-        response_data = response.json()
+        try:
+            response_data = response.json()
+        except Exception as e:
+            print(f"{e}, {response_data}")
         try: 
-            access_tokens.append(response_data["access_tokens"])
+            access_tokens.append(response_data["access_token"])
             print("Access Token refreshed!")
             if "refresh_token" in response_data.keys():
                 refresh_tokens.append(response_data["refresh_token"])
                 print("Refresh Token refreshed!")
             break
-        except KeyError:
+        except KeyError as e:
             # in-case there is a temporary error with Spotify
             time.sleep(31)
-            print(response_data)
+            print(f"{e}\n{response_data}")
 
 count = 0
 # loop will run indefinitely 
@@ -89,7 +92,6 @@ while True:
         # if the name field is empty (happens when bots abuse reports)
         current_playlist_name = ""
 
-    # enter the title your playlist is /supposed/ to be here
     if current_playlist_name != preserved_playlist_name:
 
         # restore the removed data
