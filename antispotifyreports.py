@@ -4,8 +4,6 @@ from requests_oauthlib import OAuth2Session
 import time
 from datetime import datetime
 
-# python3.9 antispotifyreports.py
-
 client_id = "your_client_id"
 client_secret = "your_client_secret"
 
