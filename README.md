@@ -2,7 +2,7 @@
 
 Are you a Spotify playlister? Is your playlist title/description often wiped by malicious reports, that Spotify refuses to deal with? This script will ensure your playlist will fix itself from any wave of malicious reporting on Spotify.
 
-This is a simple script that will restore your Spotify playlists title and description. The script will check the playlist every 31 seconds (this is adjustable, though I wouldn't reduce it) to see if the title is in-tact. If the title has been removed (or changed), the script will restore the title as it is supposed to be.
+This is a simple script that will restore your Spotify playlists title and description. The script will check the playlist every 31 seconds (this is adjustable, though I wouldn't reduce it) to see if the title is in-tact. If the title has been removed (or changed), the script will restore the title and description as it is supposed to be.
 
 It does not currently restore the cover art. It is currently optimised to protect one playlist, but that could be edited if necessary.
 
